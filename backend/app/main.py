@@ -57,6 +57,12 @@ PIPELINE_METRICS = {
     "last_chat_time_ms": 0.0
 }
 
+# Health check endpoint (fast, no heavy initialization)
+@app.get("/health")
+def health_check():
+    """Quick health check endpoint for Render monitoring"""
+    return {"status": "ok", "service": "kirana-api"}
+
 @app.post("/api/upload")
 def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
     """
