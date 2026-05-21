@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pandas
+openpyxl
+prophet
+langchain
+langchain-community
+langchain-openai
+chromadb
+sqlalchemy
+pydantic
+python-dotenv
+python-multipart
