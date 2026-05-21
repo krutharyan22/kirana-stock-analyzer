@@ -1,0 +1,14 @@
+# requirements.txt for Render deployment
+# Add gunicorn for production server (Render needs this)
+fastapi==0.104.1
+uvicorn==0.24.0
+gunicorn==21.2.0
+pandas==2.1.3
+openpyxl==3.11.0
+sqlalchemy==2.0.23
+pydantic==2.5.0
+python-dotenv==1.0.0
+langchain==0.1.0
+langchain-openai==0.0.5
+chromadb==0.4.17
+prophet==1.1.5
