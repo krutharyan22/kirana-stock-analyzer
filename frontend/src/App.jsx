@@ -153,24 +153,29 @@ export default function App() {
 
             {/* Empty State / Get Started Banner if no products imported */}
             {products.length === 0 && (
-              <div className="glass-panel rounded-2xl border border-slate-200 p-12 text-center max-w-2xl mx-auto my-8 flex flex-col items-center justify-center space-y-4 bg-white">
-                <FileSpreadsheet className="h-12 w-12 text-emerald-600 animate-bounce" />
-                <h3 className="text-lg font-bold text-slate-800">No Sales Data Found</h3>
-                <p className="text-sm text-slate-600 max-w-md">
-                  To get started, download our pre-configured demo Excel sheet with 90 days of Kirana daily logs, then upload it using the dropzone.
-                </p>
-                <div className="flex flex-col items-center gap-2 pt-2">
-                  <button
-                    onClick={handleDownloadDemo}
-                    disabled={demoGenerating}
-                    className="flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl bg-slate-900 hover:bg-slate-800 text-white cursor-pointer shadow-sm"
-                  >
-                    <Download className="h-4 w-4" />
-                    Download Sample Log
-                  </button>
-                  <p className="text-[10px] text-slate-500 mt-1 max-w-sm">
-                    Dear user, please use this format to analyze your daily sales log and track your inventory stock.
+              <div className="flex flex-col gap-6 items-center">
+                <div className="glass-panel rounded-2xl border border-slate-200 p-12 text-center max-w-2xl mx-auto flex flex-col items-center justify-center space-y-4 bg-white">
+                  <FileSpreadsheet className="h-12 w-12 text-emerald-600 animate-bounce" />
+                  <h3 className="text-lg font-bold text-slate-800">No Sales Data Found</h3>
+                  <p className="text-sm text-slate-600 max-w-md">
+                    To get started, download our pre-configured demo Excel sheet with 90 days of Kirana daily logs, then upload it using the dropzone.
                   </p>
+                  <div className="flex flex-col items-center gap-2 pt-2">
+                    <button
+                      onClick={handleDownloadDemo}
+                      disabled={demoGenerating}
+                      className="flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl bg-slate-900 hover:bg-slate-800 text-white cursor-pointer shadow-sm"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download Sample Log
+                    </button>
+                    <p className="text-[10px] text-slate-500 mt-1 max-w-sm">
+                      Dear user, please use this format to analyze your daily sales log and track your inventory stock.
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full max-w-2xl">
+                  <UploadExcel onUploadSuccess={fetchDashboardData} />
                 </div>
               </div>
             )}
