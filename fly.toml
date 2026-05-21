@@ -1,0 +1,30 @@
+# Fly.io configuration for Kirana Stock Analyzer
+app = "kirana-stock-analyzer"
+primary_region = "iad"  # Washington D.C. - change if closer region available
+
+[build]
+builder = "heroku"  # Uses Heroku buildpacks
+
+[env]
+  PYTHONUNBUFFERED = "true"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+
+[[mounts]]
+  source = "kirana_data"
+  destination = "/app/backend/kirana_db"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8000
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
