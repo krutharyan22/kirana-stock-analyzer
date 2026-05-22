@@ -26,12 +26,29 @@ export default function App() {
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
+  // Retry function for handling Render cold starts
+  const fetchWithRetry = async (url, maxRetries = 3, delayMs = 1000) => {
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        return await axios.get(url, { timeout: 10000 });
+      } catch (err) {
+        if (i < maxRetries - 1) {
+          console.log(`Retry ${i + 1}/${maxRetries - 1} for ${url} after ${delayMs}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delayMs));
+          delayMs *= 1.5; // Exponential backoff
+        } else {
+          throw err;
+        }
+      }
+    }
+  };
+
   const fetchDashboardData = async () => {
     try {
-      const summaryRes = await axios.get(`${API_BASE_URL}/api/dashboard`);
+      const summaryRes = await fetchWithRetry(`${API_BASE_URL}/api/dashboard`);
       setSummary(summaryRes.data);
 
-      const productsRes = await axios.get(`${API_BASE_URL}/api/products`);
+      const productsRes = await fetchWithRetry(`${API_BASE_URL}/api/products`);
       const fetchedProducts = productsRes.data;
       setProducts(fetchedProducts);
 
@@ -47,7 +64,7 @@ export default function App() {
       setError(null);
     } catch (err) {
       console.error("Dashboard fetch error:", err);
-      setError(`Failed to communicate with backend at ${API_BASE_URL}. Make sure the backend is running.`);
+      setError(`Backend is waking up or unavailable. Click "Retry Connection" to try again.`);
     } finally {
       setLoading(false);
     }
