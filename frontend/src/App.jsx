@@ -220,6 +220,14 @@ export default function App() {
           </>
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="mt-auto border-t border-slate-200 bg-slate-50 py-6 px-6">
+        <div className="max-w-7xl mx-auto text-center text-xs text-slate-600">
+          <p>© 2026 Kruth Aryan. All rights reserved.</p>
+          <p className="mt-2 text-slate-500">Kirana Store Intelligence Dashboard</p>
+        </div>
+      </footer>
     </div>
   );
 }

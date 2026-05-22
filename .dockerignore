@@ -1,0 +1,14 @@
+frontend/
+.git/
+.gitignore
+*.md
+venv/
+__pycache__/
+*.pyc
+.env.local
+temp_uploads/
+chroma_db/
+*.db
+node_modules/
+.vscode/
+.idea/
