@@ -2,9 +2,6 @@
 app = "kirana-stock-analyzer"
 primary_region = "iad"
 
-[build]
-  builder = "heroku"
-
 [env]
   PYTHONUNBUFFERED = "true"
 
