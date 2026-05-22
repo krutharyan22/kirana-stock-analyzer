@@ -72,3 +72,37 @@ Open your browser to: http://localhost:5173
    - *"कौनसे items critical list में हैं?"* (Hindi)
    - *"Show stock status for Amul Butter"*
    - The assistant answers naturally with list summaries and order suggestions (calculated as `Expected Forecast Sales - Current Stock`).
+
+---
+
+## 🌐 Production Deployment
+
+### **Recommended: Fly.io (Free Forever, No Expiration)**
+✅ **Truly free forever** - No 30-day limit, no billing surprises  
+✅ **No spindowns** - Always instantly available  
+✅ **Persistent storage** - SQLite database survives restarts  
+
+**Deploy in 5 minutes:**
+```bash
+# 1. Go to fly.io, sign up (no credit card needed)
+# 2. Install flyctl: brew install flyctl (Mac) or https://fly.io/docs/hands-on/install-flyctl/
+# 3. From project root:
+flyctl launch
+# 4. Follow prompts, deploy
+# 5. Copy Fly.io URL to Vercel environment variables
+```
+
+Full guide: [FLY_IO_DEPLOYMENT.md](FLY_IO_DEPLOYMENT.md)
+
+### **Frontend: Vercel (Free)**
+- Go to vercel.com
+- Import this GitHub repo
+- Set root directory: `frontend/`
+- Add `VITE_API_BASE_URL` environment variable with your backend URL
+- Deploy automatically on git push
+
+---
+
+## 📝 License
+© 2026 Kruth Aryan. All rights reserved.
+
