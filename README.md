@@ -1,108 +1,94 @@
-# Kirana Store Intelligence Dashboard 🛒📈
+# Kirana Stock Analyzer
 
-A modern, full-stack web application designed for small Indian grocery (Kirana) store owners to upload daily sales sheets, forecast SKU demand, identify inventory risks, and query store status using an AI Chat Assistant.
+A practical inventory and forecasting dashboard for small Kirana stores.
 
----
-
-## 🛠️ Tech Stack
-- **Frontend:** React, Tailwind CSS (v4), Recharts (data visualization), Lucide (icons)
-- **Backend:** FastAPI (Python 3.14+), SQLAlchemy (SQLite ORM)
-- **Time-Series ML:** Facebook Prophet (7-day demand forecasting & MAPE metrics)
-- **AI Chat Layer:** LangChain + ChromaDB (vector store) + OpenAI GPT-4o (with automatic rule-based NLP fallback if no API key is set)
+This repo includes:
+- `backend/` — FastAPI service, SQLite database, forecasting, and chat assistant logic
+- `frontend/` — React + Vite dashboard for uploads, tables, charts, and chat
 
 ---
 
-## 🚀 Getting Started
+## What this app does
+- Accepts daily sales uploads from Excel
+- Stores sales and inventory records in SQLite
+- Generates short-term demand forecasts using Prophet
+- Flags products as safe, reorder soon, or critical
+- Provides a basic chat interface for inventory questions
 
-### 1. Setup Backend & Python Environment
-From the project root:
-```bash
-# Create python virtual environment
-python3 -m venv venv
+---
 
-# Activate virtual environment
-source venv/bin/activate
+## Local setup
 
-# Install python dependencies (FastAPI, Prophet, LangChain, ChromaDB)
-pip install -r backend/requirements.txt
-```
-
-### 2. Configure Environment Variables
-Create or edit `backend/.env`:
-```env
-OPENAI_API_KEY=your_actual_openai_key_here
-```
-*Note: If `OPENAI_API_KEY` is blank or invalid, the chatbot automatically falls back to an offline rule-based model that operates directly on the SQLite database, responding to English and Hindi stock queries.*
-
-### 3. Launch the Backend Server
-Make sure your virtual environment is active:
+### Backend
 ```bash
 cd backend
-python3 -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
-The API documentation will be available at: http://127.0.0.1:8000/docs (local dev) or on your Railway backend URL in production
 
----
+Create `.env` if you want OpenAI access:
+```bash
+cat > .env <<'EOF'
+OPENAI_API_KEY=your_openai_key_here
+EOF
+```
 
-### 4. Launch the React Frontend
-Open a new terminal tab/window:
+Start the API:
+```bash
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Open your browser to: http://localhost:5173
+
+Open `http://localhost:5173` in the browser.
+
+If the frontend cannot reach the backend, make sure the client is pointing to `http://127.0.0.1:8000`.
 
 ---
 
-## 📊 Core Features Walkthrough
-
-1. **Download Demo Data:** On first launch, click **"Get Demo Excel Log"** in the top bar. This will trigger a backend script that creates a realistic `kirana_sales_demo.xlsx` containing:
-   - 90 days of daily sales logs for 10 typical Indian grocery items (seasonality, weekend spikes, upward trends).
-   - An inventory list representing stock levels (categorized as Safe, Critical, or Reorder).
-2. **Upload Sales logs:** Drag and drop this excel sheet into the uploader panel. The backend immediately:
-   - Aggregates daily sales records.
-   - Fits a Facebook Prophet model per product.
-   - Computes forecast accuracy (Mean Absolute Percentage Error - MAPE).
-   - Refreshes inventory risk statuses (Safe / Reorder Soon / Critical) in the database.
-   - Automatically updates vector store embeddings in ChromaDB.
-3. **Analyze Forecasts:** Click on any SKU row in the **Inventory & Reorder Log** table. The line chart will load displaying the last 21 days of actual historical daily sales and the next 7 days of forecasted sales, surrounded by a purple confidence boundary.
-4. **Chat with AI:** Type questions in English, Hindi, or Hinglish:
-   - *"What should I order this week?"*
-   - *"कौनसे items critical list में हैं?"* (Hindi)
-   - *"Show stock status for Amul Butter"*
-   - The assistant answers naturally with list summaries and order suggestions (calculated as `Expected Forecast Sales - Current Stock`).
+## How to use it
+- Generate or upload an Excel sales log
+- The backend parses the file, stores records, runs forecasting, and updates inventory status
+- Open the table to scan for critical items
+- Click a product to view the forecast chart
+- Ask the chat assistant about stock, demand, and reorder suggestions
 
 ---
 
-## 🌐 Production Deployment
-
-### **Recommended: Fly.io (Free Forever, No Expiration)**
-✅ **Truly free forever** - No 30-day limit, no billing surprises  
-✅ **No spindowns** - Always instantly available  
-✅ **Persistent storage** - SQLite database survives restarts  
-
-**Deploy in 5 minutes:**
-```bash
-# 1. Go to fly.io, sign up (no credit card needed)
-# 2. Install flyctl: brew install flyctl (Mac) or https://fly.io/docs/hands-on/install-flyctl/
-# 3. From project root:
-flyctl launch
-# 4. Follow prompts, deploy
-# 5. Copy Fly.io URL to Vercel environment variables
-```
-
-Full guide: [FLY_IO_DEPLOYMENT.md](FLY_IO_DEPLOYMENT.md)
-
-### **Frontend: Vercel (Free)**
-- Go to vercel.com
-- Import this GitHub repo
-- Set root directory: `frontend/`
-- Add `VITE_API_BASE_URL` environment variable with your backend URL
-- Deploy automatically on git push
+## Code structure
+- `backend/app/main.py` — FastAPI app and routes
+- `backend/app/database.py` — SQLite connection and session setup
+- `backend/app/models.py` / `schemas.py` — DB models and request/response schemas
+- `backend/app/forecasting.py` — forecast training and prediction logic
+- `backend/app/chat.py` — assistant prompt handling and vector search
+- `frontend/src/` — React components and page logic
 
 ---
 
-## 📝 License
-© 2026 Kruth Aryan. All rights reserved.
+## Deployment
+This repo includes deployment support for Fly.io, Render, and Google Cloud. The frontend can also be deployed separately on Vercel.
+
+If you want a quick production setup:
+- Deploy the backend from the repo root
+- Deploy `frontend/` with `VITE_API_BASE_URL` set to the backend URL
+
+See the deployment docs in the repo for platform-specific steps.
+
+---
+
+## Notes
+- This project is built for demos and light Kirana use cases.
+- Forecasting is short-term and works best with consistent sales data.
+- The chat assistant can use OpenAI if configured, otherwise it still answers from stored inventory data.
+
+---
+
+## License
+Use this code for experimentation and demos. All rights reserved.
 
